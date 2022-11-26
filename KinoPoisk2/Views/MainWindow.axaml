@@ -1,0 +1,154 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:KinoPoisk2.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:kinoPoisk2="clr-namespace:KinoPoisk2"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="KinoPoisk2.Views.MainWindow"
+        Icon="/Assets/logo.ico"
+        Title="{Binding NameProgram}"
+        Height="450"
+        Width="1100"
+        MinHeight="450"
+        MinWidth="1100"
+        ExtendClientAreaToDecorationsHint="True"
+        >
+        
+    
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+        
+    </Design.DataContext>
+    
+    
+    
+    
+    <Grid Background="{Binding BackgroundProgram}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"></RowDefinition>
+            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="300"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Row="0" VerticalAlignment="Bottom">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="300"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Label FontWeight="Bold" FontStyle="15" Foreground="{Binding ForegroundLetters}" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Margin="10" FontSize="18" Content="{Binding NameProgram}"></Label>
+                <TextBox Watermark="Название фильма" Width="300" HorizontalAlignment="Right" x:Name="SearchRequest" FontWeight="Bold" FontStyle="25"  Grid.Row="0" Grid.Column="1" Margin="5" Background="{Binding BackgroundProgram}" Foreground="{Binding ForegroundLetters}"></TextBox>
+                <Button HorizontalAlignment="Right" Click="SearchBtn" FontWeight="Bold" FontStyle="25" Margin="15,0,0,0" Grid.Row="0" Grid.Column="2" Content="Поиск" Foreground="{Binding ForegroundLetters}"></Button>
+                <Button HorizontalAlignment="Right" Click="Picks" FontWeight="Bold" FontStyle="25" Margin="15,0,0,0" Grid.Row="0" Grid.Column="4" Content="Выбор критиков" Foreground="{Binding ForegroundLetters}"></Button>
+                <Button Grid.Column="5" Grid.Row="0" x:Name="Profile" Click="ConfigSettings" Width="32" Height="32" Margin="20,0,0,0"><Image Source="/Assets/message.ico" Cursor="Hand"></Image></Button>
+                <Button HorizontalAlignment="Right" Click="Notes" FontWeight="Bold" FontStyle="25" Margin="15,0,0,0" Grid.Row="0" Grid.Column="6" Content="Заметки" Foreground="{Binding ForegroundLetters}"></Button>
+            </Grid>
+        </StackPanel>
+        <ScrollViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5">
+         
+            <StackPanel> 
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Label Margin="10,0,0,0" Content="Сортировка по дате {В формате год-месяц-день}: От  " VerticalAlignment="Center" Grid.Column="0" FontWeight="Bold" FontFamily="Comic Sans MS" Foreground="{Binding ForegroundLetters}"></Label>
+                    <TextBox Watermark="2021-12-31" Width="150" Grid.Column="1" x:Name="DateOut_OT"></TextBox>
+                    <Label Content="До" VerticalAlignment="Center" Grid.Column="2" FontWeight="Bold" FontFamily="Comic Sans MS" Foreground="{Binding ForegroundLetters}"></Label>
+                    <TextBox Watermark="2022-12-31" Width="150" Grid.Column="3" x:Name="DateOut_DO"></TextBox>
+                    <Button HorizontalAlignment="Right" Click="SortDate" FontWeight="Bold" FontStyle="25" Grid.Column="4" Margin="10,0,0,0" Content="Сортировать" Foreground="{Binding ForegroundLetters}"></Button>
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
+        <ScrollViewer Grid.Column="0" Grid.ColumnSpan="5" Grid.Row="2">
+            <StackPanel>
+                
+                <ScrollViewer>
+                    <DataGrid Name="MyDataGrid" x:Name="DataGridFilms" IsVisible="True" IsReadOnly="True" Foreground="{Binding ForegroundLetters}" AutoGenerateColumns="False" FontWeight="Bold" FontFamily="Franklin Gothic Medium" FontSize="14">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Название фильма"  Binding="{Binding Path=TitleFilm}"/>
+                            <DataGridTextColumn Header="Рейтинг фильма" Binding="{Binding Path=RatingFilm}" />
+                            <DataGridTextColumn Header="Дата выхода" Binding="{Binding Path=DateOut}" />
+                            <DataGridTextColumn Header="Дата пуликации обзора" Binding="{Binding Path=DatePublic}" />
+                            <DataGridTextColumn Header="Путь к картинке" Binding="{Binding Path=multimedia.src}" />
+                            <!-- <DataGridTextColumn Header="Ссылка на статью" Binding="{Binding Path=link.url}" /> -->
+                        </DataGrid.Columns>
+                        
+                        <DataGrid.RowDetailsTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Margin="20">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition></ColumnDefinition>
+                                            <ColumnDefinition></ColumnDefinition>
+                                            <ColumnDefinition></ColumnDefinition>
+                                            <ColumnDefinition></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition></RowDefinition>
+                                            <RowDefinition></RowDefinition>
+                                            <RowDefinition></RowDefinition>
+                                            <RowDefinition></RowDefinition>
+                                        </Grid.RowDefinitions>
+                                        <Image
+                                                Grid.Column="0"
+                                                Grid.Row="0"
+                                                Grid.RowSpan="4"
+                                                Width="150"
+                                                Height="150"
+                                                Source="{Binding Path=multimedia.image}"
+                                                >
+                                        </Image>
+                                        <TextBlock Grid.Column="1" Grid.Row="0" Text="Автор этой записи в NewYork Times: " />
+                                        <TextBlock Grid.Column="2" Grid.Row="0" Text="{Binding Path=Author}" />
+                                        <TextBlock Grid.Column="1" Grid.Row="1" Text="Описание фильма"/>
+                                        <TextBlock Grid.Column="2" Grid.Row="1" Text="{Binding Path=DiscriptionFilm}" TextWrapping="Wrap"/>
+                                        <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding Path=link.suggested_link_text}"/>
+                                        <TextBox Grid.Column="1" Grid.Row="3" IsReadOnly="True" Width="400" Text="{Binding Path=link.url}" TextWrapping="Wrap"/>
+                                    </Grid>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGrid.RowDetailsTemplate>
+                    </DataGrid>
+                </ScrollViewer>
+                
+                <StackPanel IsVisible="False" x:Name="ConfigureSettings">
+                    <Label HorizontalAlignment="Center" Margin="10,0,0,0" Content="Справочная информация." FontWeight="Bold" FontSize="20" FontFamily="Comic Sans MS"></Label>
+                    <Menu HorizontalAlignment="Center">
+                        <Button Click="AboutProgrammer" Content="О разроботчеке"></Button>
+                        <Button Click="AboutProgramm" Content="О приложении"></Button>
+                    </Menu>
+                    <TextBlock x:Name="AboutText" HorizontalAlignment="Center" Margin="10,10,10,10" FontWeight="Bold" FontFamily="Comic Sans MS"></TextBlock>
+                    <Image x:Name="ImageTeh" Source="/Assets/imageTeh.jpg" Height="256" Width="256"></Image>
+                </StackPanel>
+                
+                <StackPanel IsVisible="False" x:Name="NotesPlase">
+                    <Label HorizontalAlignment="Center" Margin="10,0,0,0" Content="Заметки." FontWeight="Bold" FontSize="20" FontFamily="Comic Sans MS"></Label>
+                    <Menu HorizontalAlignment="Center">
+                        <Button Click="OpenNote" Content="Открыть"></Button>
+                        <Button Click="SaveNote" Content="Сохранить"></Button>
+                    </Menu>
+                    <TextBox Width="900" Height="250" x:Name="NotesText" TextWrapping="Wrap" HorizontalAlignment="Center" Margin="10,10,10,10" FontWeight="Bold" FontFamily="Comic Sans MS"></TextBox>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Window>
