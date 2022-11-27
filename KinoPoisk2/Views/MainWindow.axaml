@@ -143,7 +143,7 @@
                 <StackPanel IsVisible="False" x:Name="NotesPlase">
                     <Label HorizontalAlignment="Center" Margin="10,0,0,0" Content="Заметки." FontWeight="Bold" FontSize="20" FontFamily="Comic Sans MS"></Label>
                     <Menu HorizontalAlignment="Center">
-                        <Button Click="OpenNote" Content="Открыть"></Button>
+                        <!-- <Button Click="OpenNote" Content="Открыть"></Button> -->
                         <Button Click="SaveNote" Content="Сохранить"></Button>
                     </Menu>
                     <TextBox Width="900" Height="250" x:Name="NotesText" TextWrapping="Wrap" HorizontalAlignment="Center" Margin="10,10,10,10" FontWeight="Bold" FontFamily="Comic Sans MS"></TextBox>

@@ -156,6 +156,39 @@ namespace KinoPoisk2.Views
             
             string url = $"https://api.nytimes.com/svc/movies/v2/reviews/all.json?api-key={API_KEY}";
             GetApiRequest(url);
+            
+            
+            string text = "";
+            string pathTxt = "";
+
+            try
+            {
+                DateTime now = DateTime.Now;
+                string myDocuments = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments); // Получаю путь к папки Мои документы
+                string path = myDocuments + "\\MyMovie"; // Добовляю название проекта
+
+                pathTxt = $"{path}\\Notes.txt";
+            
+                using (StreamReader fs = new StreamReader(pathTxt))
+                {
+                    while (true)
+                    {
+                        // Читаем строку из файла во временную переменную.
+                        string temp = fs.ReadLine();
+
+                        // Если достигнут конец файла, прерываем считывание.
+                        if(temp == null) break;
+
+                        // Пишем считанную строку в итоговую переменную.
+                        text  += temp + "\n";
+                    }
+                }
+                NotesText.Text = text;
+            }
+            catch (Exception exception)
+            {
+                NotesText.Text = "Нет сохраненной заметки!";
+            }
 
         }
         
@@ -182,6 +215,7 @@ namespace KinoPoisk2.Views
             if (DataGridFilms.IsVisible == true)
             {
                 DataGridFilms.IsVisible = false;
+                NotesPlase.IsVisible = false;
                 ConfigureSettings.IsVisible = true;
             }
             else if ( ConfigureSettings.IsVisible == true)
