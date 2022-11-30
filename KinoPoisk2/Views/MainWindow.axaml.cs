@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -19,7 +20,9 @@ using Newtonsoft.Json;
 using ReactiveUI;
 using Tmds.DBus;
 using System.Drawing;
+using Microsoft.Data.Sqlite;
 using Microsoft.Win32;
+using Color = Avalonia.Media.Color;
 using Image = System.Drawing.Image;
 
 namespace KinoPoisk2.Views
@@ -31,6 +34,7 @@ namespace KinoPoisk2.Views
         public List<Link> Links = new List<Link>();
 
         public string API_KEY = "5rBE8RxfB49Cr3r2wVbDtevufGJmYLxD"; // Является ключом доступа к API
+        public string connectionString = @"D:\КУРСАЧ\KinoPoisk2New\KinoPoisk2\Models\Chinook.db";
         public static byte[] ImageToByteArrayFromFilePath(string imagefilePath) // Метод для перевода ссылки на картинку в масив байт
         {
             byte[] imageArray = File.ReadAllBytes(imagefilePath);
@@ -138,6 +142,11 @@ namespace KinoPoisk2.Views
                                 $"Инофрмация об ощибке в блоке ниже:\n{e}\n////////////////////////////////////////////////////");
             }
         } // Метод созданный для обращения к API. Принимает URL запрос и запрлняет DataGrid
+
+        public void UpdateTime()
+        {
+            Time.Content = "Местное время: " + DateTime.Now.ToString("t");
+        }
                                                         
         
         public MainWindow()
@@ -145,6 +154,7 @@ namespace KinoPoisk2.Views
             InitializeComponent();
             
             /*
+             * 
              * На момент 25.11.2022 я застрял на проблеме того что не могу вывести картинку для
              * Фильма пробовал много способов но пока что не выходит
              *
@@ -152,11 +162,13 @@ namespace KinoPoisk2.Views
              * и закоментирал что считаю нужным
              * 
              * by Dm1Tr0N
+             * 
              */
+            
             
             string url = $"https://api.nytimes.com/svc/movies/v2/reviews/all.json?api-key={API_KEY}";
             GetApiRequest(url);
-            
+            UpdateTime();
             
             string text = "";
             string pathTxt = "";
@@ -196,18 +208,21 @@ namespace KinoPoisk2.Views
         {
             string url = $"https://api.nytimes.com/svc/movies/v2/reviews/search.json?query={SearchRequest.Text}&api-key={API_KEY}";
             GetApiRequest(url);
+            UpdateTime();
         }
 
         private void SortDate(object? sender, RoutedEventArgs e)
         {
             string url = $"https://api.nytimes.com/svc/movies/v2/reviews/all.json?opening-date={DateOut_OT.Text}:{DateOut_DO.Text}&api-key={API_KEY}";
             GetApiRequest(url);
+            UpdateTime();
         }
 
         private void Picks(object? sender, RoutedEventArgs e)
         {
             string url = $"https://api.nytimes.com/svc/movies/v2/reviews/picks.json?api-key={API_KEY}";
             GetApiRequest(url);
+            UpdateTime();
         }
 
         private void ConfigSettings(object? sender, RoutedEventArgs e)
@@ -223,6 +238,7 @@ namespace KinoPoisk2.Views
                 DataGridFilms.IsVisible = true;
                 ConfigureSettings.IsVisible = false;
             }
+            UpdateTime();
         }
 
         private void AboutProgrammer(object? sender, RoutedEventArgs e)
@@ -234,6 +250,7 @@ namespace KinoPoisk2.Views
                 "это хобби с моей жизнью, В итоге выбрал специальность которая мне подъодит\n" +
                 "И сейчас обучаясь на эту специальность пишу эту программу для Курсового проекта";
             ImageTeh.IsVisible = false;
+            UpdateTime();
         }
 
         private void AboutProgramm(object? sender, RoutedEventArgs e)
@@ -252,6 +269,7 @@ namespace KinoPoisk2.Views
                 "   * API Movie Reviews\n" +
                 "   * Windows 11 PRO";
             ImageTeh.IsVisible = false;
+            UpdateTime();
         }
 
         private void Notes(object? sender, RoutedEventArgs e)
@@ -267,6 +285,7 @@ namespace KinoPoisk2.Views
                 NotesPlase.IsVisible = false;
                 DataGridFilms.IsVisible = true;
             }
+            UpdateTime();
         }
 
         private void OpenNote(object? sender, RoutedEventArgs e)
@@ -302,6 +321,7 @@ namespace KinoPoisk2.Views
             {
                 NotesText.Text = "Нет сохраненной заметки!";
             }
+            UpdateTime();
         }
 
         private void SaveNote(object? sender, RoutedEventArgs e)
@@ -324,6 +344,147 @@ namespace KinoPoisk2.Views
             catch (Exception exception)
             {
                 NotesText.Text = "Нечего сохранять!";
+            }
+            UpdateTime();
+        }
+
+        private void MyDataGrid_OnCopyingRowClipboardContent(object? sender, DataGridRowClipboardEventArgs e)
+        {
+            var text = e.Item;
+        }
+
+        private void Button_OnClick(object? sender, RoutedEventArgs e)
+        {
+            string LinkFilm_Unique = ((Result)DataGridFilms.SelectedItem).link.url;
+
+            var SelectedFilm = Results.SingleOrDefault(x => x.link.url == LinkFilm_Unique);
+            
+            string sqlExpression = "SELECT * FROM Favorites";
+            using (var connection = new SqliteConnection("Data Source=" + connectionString))
+            {
+                connection.Open();
+
+                bool CheckLink = false;
+                
+                SqliteCommand command1 = new SqliteCommand(sqlExpression, connection);
+                using (SqliteDataReader reader = command1.ExecuteReader())
+                {
+                    if (reader.HasRows) // если есть данные
+                    {
+                        while (reader.Read())   // построчно считываем данные
+                        {
+                            var Link = Convert.ToString(reader.GetValue(0));
+                            string TitleFilm = Convert.ToString(reader.GetValue(1));
+                            var RatingFilm = Convert.ToString(reader.GetValue(2));
+                            var Pick = Convert.ToString(reader.GetValue(3));
+                            var Author = Convert.ToString(reader.GetValue(4));
+                            var DopTitle = Convert.ToString(reader.GetValue(5));
+                            var DiscriptionFilm = Convert.ToString(reader.GetValue(6));
+                            var DatePublic = Convert.ToString(reader.GetValue(7));
+                            var DateOut = Convert.ToString(reader.GetValue(8));
+                            var DateUpdatePost = Convert.ToString(reader.GetValue(9));
+                            
+                            Debug.WriteLine($"{Link} \t {TitleFilm} \t {RatingFilm} \t {Pick} \t {Author} \t {DopTitle} \t {DiscriptionFilm} \t {DatePublic} \t {DateOut} \t {DateUpdatePost}");
+                        }
+                    }
+                }
+
+
+                try
+                {
+                    SqliteCommand command = new SqliteCommand();
+                    command.Connection = connection;
+                    command.CommandText = $"INSERT INTO Favorites (Link, TitleFilm, RatingFilm, Pick, Author, DopTitle, DiscriptionFilm, DatePublic, DateOut, DateUpdatePost) " +
+                                          $"VALUES ('{SelectedFilm.link.url}', '{SelectedFilm.TitleFilm}', '{SelectedFilm.RatingFilm}', '{SelectedFilm.Pick}', '{SelectedFilm.Author}', '{SelectedFilm.DopTitle}', '{SelectedFilm.DiscriptionFilm}', '{SelectedFilm.DatePublic}', '{SelectedFilm.DateOut}', '{SelectedFilm.DateUpdatePost}')";
+                    Time.Content = "Добавлен! " + SelectedFilm.TitleFilm;
+                    int number = command.ExecuteNonQuery();
+                }
+                catch (Exception exception)
+                {
+                    Time.Content = SelectedFilm.TitleFilm + " Уже есть!";
+                }
+
+            }
+        }
+
+        public void UpdateFavorites()
+        {
+            string sqlExpression = "SELECT * FROM Favorites";
+            using (var connection = new SqliteConnection("Data Source=" + connectionString))
+            {
+                connection.Open();
+
+                SqliteCommand command1 = new SqliteCommand(sqlExpression, connection);
+                using (SqliteDataReader reader = command1.ExecuteReader())
+                {
+                    string LinkFilm_Unique;
+                    if (reader.HasRows) // если есть данные
+                    {
+                        while (reader.Read()) // построчно считываем данные
+                        {
+                            var Link = Convert.ToString(reader.GetValue(0));
+                            string TitleFilm = Convert.ToString(reader.GetValue(1));
+                            var RatingFilm = Convert.ToString(reader.GetValue(2));
+                            var Pick = Convert.ToString(reader.GetValue(3));
+                            var Author = Convert.ToString(reader.GetValue(4));
+                            var DopTitle = Convert.ToString(reader.GetValue(5));
+                            var DiscriptionFilm = Convert.ToString(reader.GetValue(6));
+                            var DatePublic = Convert.ToString(reader.GetValue(7));
+                            var DateOut = Convert.ToString(reader.GetValue(8));
+                            var DateUpdatePost = Convert.ToString(reader.GetValue(9));
+
+                            Debug.WriteLine(
+                                $"{Link} \t {TitleFilm} \t {RatingFilm} \t {Pick} \t {Author} \t {DopTitle} \t {DiscriptionFilm} \t {DatePublic} \t {DateOut} \t {DateUpdatePost}");
+                            var editLink = new Link(null, Link, null);
+                            Results.Add(new Result(TitleFilm, DopTitle, DiscriptionFilm, Author, RatingFilm, DatePublic,
+                                DateOut, DateUpdatePost, null, editLink));
+                        }
+                    }
+                }
+            }
+        }
+
+        private void Favorites(object? sender, RoutedEventArgs e)
+        {
+            DataGridFilms.Items = null; // Производится очистка DataGrid на тот случай если там что то есть.
+            Results.Clear(); // Чищу класс Результатов на тот случай если оно заполнен
+
+            UpdateFavorites();
+            
+            DataGridFilms.Items = Results; // В итоге привязываю калекцию к DataGrid
+            
+        }
+
+        private void DeleteFromfavorite(object? sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string LinkFilm_Unique = ((Result)DataGridFilms.SelectedItem).link.url;
+                string sqlExpression = $"DELETE  FROM Favorites WHERE Link='{LinkFilm_Unique}'";
+                using (var connection = new SqliteConnection($"Data Source={connectionString}"))
+                {
+                    connection.Open();
+ 
+                    SqliteCommand command = new SqliteCommand(sqlExpression, connection);
+ 
+                    int number = command.ExecuteNonQuery();
+ 
+                    Debug.WriteLine($"Удалено объектов: {number}");
+                    Time.Content = $"Удалено объектов: {number}";
+                    if (number == 0)
+                    {
+                        Time.Content += " т.к нет Такого!";
+                    }
+                }
+            
+                DataGridFilms.Items = null; // Производится очистка DataGrid на тот случай если там что то есть.
+                Results.Clear(); // Чищу класс Результатов на тот случай если оно заполнен
+                UpdateFavorites();
+                DataGridFilms.Items = Results;
+            }
+            catch (Exception exception)
+            {
+                Time.Content = $"У вас нет такого!";
             }
         }
     }
