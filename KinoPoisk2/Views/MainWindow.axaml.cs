@@ -211,11 +211,8 @@ namespace KinoPoisk2.Views
                 DataGridFilms.IsVisible = false;
                 NotesPlase.IsVisible = false;
                 ConfigureSettings.IsVisible = true;
-            }
-            else if ( ConfigureSettings.IsVisible == true)
-            {
-                DataGridFilms.IsVisible = true;
-                ConfigureSettings.IsVisible = false;
+                Criticks.IsVisible = false;
+                AddRewiew.IsVisible = false;
             }
             UpdateTime();
         }
@@ -258,11 +255,8 @@ namespace KinoPoisk2.Views
                 ConfigureSettings.IsVisible = false;
                 DataGridFilms.IsVisible = false;
                 NotesPlase.IsVisible = true;
-            }
-            else if (NotesPlase.IsVisible == true)
-            {
-                NotesPlase.IsVisible = false;
-                DataGridFilms.IsVisible = true;
+                Criticks.IsVisible = false;
+                AddRewiew.IsVisible = false;
             }
             UpdateTime();
         }
