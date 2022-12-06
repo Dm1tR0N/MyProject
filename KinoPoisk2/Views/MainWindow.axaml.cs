@@ -32,9 +32,13 @@ namespace KinoPoisk2.Views
         public List<Result> Results = new List<Result>(8);
         public List<Multimedia> Multimedias = new List<Multimedia>();
         public List<Link> Links = new List<Link>();
+        public List<ResultCritic> Critics = new List<ResultCritic>();
 
         public string API_KEY = "5rBE8RxfB49Cr3r2wVbDtevufGJmYLxD"; // Является ключом доступа к API
         public string connectionString = @"D:\КУРСАЧ\KinoPoisk2New\KinoPoisk2\Models\Chinook.db";
+        
+        public string path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\MyMovie"; // Получаю путь к папки Мои документы
+
         public static byte[] ImageToByteArrayFromFilePath(string imagefilePath) // Метод для перевода ссылки на картинку в масив байт
         {
             byte[] imageArray = File.ReadAllBytes(imagefilePath);
@@ -53,6 +57,12 @@ namespace KinoPoisk2.Views
             str = str.Replace("!", "_");
             str = str.Replace(".", "_");
             str = str.Replace(",", "_");
+            return str;
+        }
+        
+        public string DeleteBr(string str) // Метод который удаляет все лишние символы в сторе
+        {
+            str = str.Replace("<br/><br/>", " ");
             return str;
         }
 
@@ -94,17 +104,16 @@ namespace KinoPoisk2.Views
 
                             var str = item.multimedia.src; // Получаю путь к ссылке на картинку
                             byte[] photobytes = null; // Заранее создаю пустую переменную для кранение картинки в байт коде
-
+                            
                             namePhoto = ConvertName(item.TitleFilm); // Делаю название для будущей фотографии без пробелов и спец-знаков
-                        
-                        
+                            
+                            
                             using (WebClient client1 = new WebClient())
                             {
                                 photobytes = client1.DownloadData(str);
                             }
-                        
-                            string myDocuments = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments); // Получаю путь к папки Мои документы
-                            string path = myDocuments + "\\MyMovie"; // Добовляю название проекта
+                            
+                            
                             string subpath = $"{now.ToString("dd-MM-yyyy")}"; // Палучаю дату сегодня
                             DirectoryInfo dirInfo = new DirectoryInfo(path);
                             if (!dirInfo.Exists)
@@ -116,15 +125,15 @@ namespace KinoPoisk2.Views
                             pathPhoto = $"{path}\\{now.ToString("dd-MM-yyyy")}\\{namePhoto}_Dm1Tr0N.jpg";
                             pathPhoto = pathPhoto.Replace(@"\", @"\\");
                             File.WriteAllBytes(pathPhoto, photobytes); // Добавляю все фотографии в папку с кэшем программы
-
+                            
                             Image photo;
                             photobytes = ImageToByteArrayFromFilePath($"{path}\\{now.ToString("dd-MM-yyyy")}\\{namePhoto}_Dm1Tr0N.jpg"); // Перевожу картинку в масив байт
                             photo = ByteArrayToImagebyMemoryStream(photobytes); // Перевожу масив байт в картинку
                         
-                            Multimedia editMult = new Multimedia(item.multimedia.type, pathPhoto, item.multimedia.width, item.multimedia.height, photo);
+                            Multimedia editMult = new Multimedia(item.multimedia.type, item.multimedia.src, item.multimedia.width, item.multimedia.height, photo);
                             Multimedias.Add(editMult); 
                             Links.Add(new Link(item.link.type, item.link.url, item.link.suggested_link_text));
-                            Results.Add(new Result(item.TitleFilm, item.DopTitle, item.DiscriptionFilm, item.Author, item.RatingFilm, item.DatePublic, item.DateOut, item.DateUpdatePost, editMult, item.link));
+                            Results.Add(new Result(item.TitleFilm, item.DopTitle, item.DiscriptionFilm, item.Author, item.RatingFilm, item.DatePublic, item.DateOut, item.DateUpdatePost, item.multimedia, item.link));
                             // Заполняю калассы данными
                         }
                         else
@@ -247,7 +256,7 @@ namespace KinoPoisk2.Views
                 "Программист: Михайлов Дмитрий Владимирович,\n" +
                 "Но момент 2022 года обучаюсь в Томском Техникуме Информационных Технологий\n" +
                 "Изначально, программирование было моим хобби но в будущем я хотел связать\n" +
-                "это хобби с моей жизнью, В итоге выбрал специальность которая мне подъодит\n" +
+                "это хобби с моей жизнью, В итоге выбрал специальность которая мне подходит\n" +
                 "И сейчас обучаясь на эту специальность пишу эту программу для Курсового проекта";
             ImageTeh.IsVisible = false;
             UpdateTime();
@@ -288,41 +297,41 @@ namespace KinoPoisk2.Views
             UpdateTime();
         }
 
-        private void OpenNote(object? sender, RoutedEventArgs e)
-        {
-            string text = "";
-            string pathTxt = "";
-
-            try
-            {
-                DateTime now = DateTime.Now;
-                string myDocuments = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments); // Получаю путь к папки Мои документы
-                string path = myDocuments + "\\MyMovie"; // Добовляю название проекта
-
-                pathTxt = $"{path}\\Notes.txt";
-            
-                using (StreamReader fs = new StreamReader(pathTxt))
-                {
-                    while (true)
-                    {
-                        // Читаем строку из файла во временную переменную.
-                        string temp = fs.ReadLine();
-
-                        // Если достигнут конец файла, прерываем считывание.
-                        if(temp == null) break;
-
-                        // Пишем считанную строку в итоговую переменную.
-                        text  += temp + "\n";
-                    }
-                }
-                NotesText.Text = text;
-            }
-            catch (Exception exception)
-            {
-                NotesText.Text = "Нет сохраненной заметки!";
-            }
-            UpdateTime();
-        }
+        // private void OpenNote(object? sender, RoutedEventArgs e)
+        // {
+        //     string text = "";
+        //     string pathTxt = "";
+        //
+        //     try
+        //     {
+        //         DateTime now = DateTime.Now;
+        //         string myDocuments = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments); // Получаю путь к папки Мои документы
+        //         string path = myDocuments + "\\MyMovie"; // Добовляю название проекта
+        //
+        //         pathTxt = $"{path}\\Notes.txt";
+        //     
+        //         using (StreamReader fs = new StreamReader(pathTxt))
+        //         {
+        //             while (true)
+        //             {
+        //                 // Читаем строку из файла во временную переменную.
+        //                 string temp = fs.ReadLine();
+        //
+        //                 // Если достигнут конец файла, прерываем считывание.
+        //                 if(temp == null) break;
+        //
+        //                 // Пишем считанную строку в итоговую переменную.
+        //                 text  += temp + "\n";
+        //             }
+        //         }
+        //         NotesText.Text = text;
+        //     }
+        //     catch (Exception exception)
+        //     {
+        //         NotesText.Text = "Нет сохраненной заметки!";
+        //     }
+        //     UpdateTime();
+        // }
 
         private void SaveNote(object? sender, RoutedEventArgs e)
         {
@@ -348,10 +357,10 @@ namespace KinoPoisk2.Views
             UpdateTime();
         }
 
-        private void MyDataGrid_OnCopyingRowClipboardContent(object? sender, DataGridRowClipboardEventArgs e)
-        {
-            var text = e.Item;
-        }
+        // private void MyDataGrid_OnCopyingRowClipboardContent(object? sender, DataGridRowClipboardEventArgs e)
+        // {
+        //     var text = e.Item;
+        // }
 
         private void Button_OnClick(object? sender, RoutedEventArgs e)
         {
@@ -482,9 +491,71 @@ namespace KinoPoisk2.Views
                 UpdateFavorites();
                 DataGridFilms.Items = Results;
             }
-            catch (Exception exception)
+            catch (Exception)
             {
                 Time.Content = $"У вас нет такого!";
+            }
+        }
+
+        private void SearchCritick(object? sender, RoutedEventArgs e)
+        {
+            if (Criticks.IsVisible == false)
+            {
+                DataGridFilms.IsVisible = false;
+                Criticks.IsVisible = true;
+            }
+            else
+            {
+                DataGridFilms.IsVisible = true;
+                Criticks.IsVisible = false;
+            }
+        }
+
+        private void SearchCriticInList(object? sender, RoutedEventArgs e)
+        {
+            string pathSearch = $"https://api.nytimes.com/svc/movies/v2/critics/{PlaceWithName.Text}.json?api-key={API_KEY}";
+            try
+            {
+                ListCritics.Items = null;
+                Critics.Clear(); // Чищу класс Результатов на тот случай если оно заполнен
+                using (var client = new HttpClient())
+                {
+                    var endpoint = new Uri(pathSearch);
+                    var result = client.GetAsync(endpoint).Result;
+                    var json = result.Content.ReadAsStringAsync().Result;
+                    // Тут я запрос выполил и получил JSON 
+                    
+                    RootobjectCritic? result1 = JsonConvert.DeserializeObject<RootobjectCritic>(json); // Десериалезую JSON в классы
+
+                    string namePhoto = "";
+                    string pathPhoto;
+
+
+                    var listFilms = result1.results; // Создаю лист для последущей работы с ним
+                    DateTime now = DateTime.Now;
+                    foreach (var item in listFilms) // Перебираю всю информацию
+                    {
+                        if (listFilms != null)
+                        {
+                            Critics.Add(new ResultCritic(item.display_name, item.sort_name, item.status, DeleteBr(item.bio)));
+                            // Заполняю калассы данными
+                        }
+                        else
+                        {
+                            Debug.Write("-> Увы, Нечего не найдено. ✘\n");
+                        }
+                    }
+
+                    ListCritics.Items = Critics;
+                    Time.Content = $"Информации о критеке {PlaceWithName.Text}";
+                    Debug.WriteLine($"Запрос к API выполнен успешно!");
+                }
+            }
+            catch (Exception e1)
+            {
+                Time.Content = "Информации о критеке нет!";
+                Debug.WriteLine($"Произошла критическая ошибка при выволнении запроса к API!!\n" +
+                                $"Инофрмация об ощибке в блоке ниже:\n{e1}\n////////////////////////////////////////////////////");
             }
         }
     }

@@ -8,10 +8,10 @@
         x:Class="KinoPoisk2.Views.MainWindow"
         Icon="/Assets/logo.ico"
         Title="{Binding NameProgram}"
-        Height="450"
-        Width="1150"
-        MinHeight="450"
-        MinWidth="1150"
+        Height="500"
+        Width="1200"
+        MinHeight="500"
+        MinWidth="1200"
         ExtendClientAreaToDecorationsHint="True"
         >
         
@@ -37,7 +37,7 @@
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Row="0" VerticalAlignment="Bottom">
+        <StackPanel Grid.Row="0" VerticalAlignment="Bottom" Margin="0,25,0,0">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="50"></RowDefinition>
@@ -51,14 +51,17 @@
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <Label FontWeight="Bold" FontStyle="15" Foreground="{Binding ForegroundLetters}" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Margin="10" FontSize="18" Content="{Binding NameProgram}"></Label>
                 <TextBox Watermark="Название фильма" Width="300" HorizontalAlignment="Right" x:Name="SearchRequest" FontWeight="Bold" FontStyle="25"  Grid.Row="0" Grid.Column="1" Margin="5" Background="{Binding BackgroundProgram}" Foreground="{Binding ForegroundLetters}"></TextBox>
                 <Button HorizontalAlignment="Right" Click="SearchBtn" FontWeight="Bold" FontStyle="25" Margin="15,0,0,0" Grid.Row="0" Grid.Column="2" Content="Поиск" Foreground="{Binding ForegroundLetters}"></Button>
                 <Button HorizontalAlignment="Right" Click="Picks" FontWeight="Bold" FontStyle="25" Margin="15,0,0,0" Grid.Row="0" Grid.Column="4" Content="Выбор критиков" Foreground="{Binding ForegroundLetters}"></Button>
-                <Button Grid.Column="5" Grid.Row="0" x:Name="Profile" Click="ConfigSettings" Margin="20,0,0,0" Content="Информация"></Button>
+                <Button Grid.Column="5" Grid.Row="0" x:Name="Profile" Click="ConfigSettings" Margin="20,0,0,0" Content="Информация" FontWeight="Bold" FontStyle="25"></Button>
                 <Button HorizontalAlignment="Right" Click="Notes" FontWeight="Bold" FontStyle="25" Margin="15,0,0,0" Grid.Row="0" Grid.Column="6" Content="Заметки" Foreground="{Binding ForegroundLetters}"></Button>
-                 <Button HorizontalAlignment="Right" Click="Favorites" FontWeight="Bold" FontStyle="25" Margin="15,0,0,0" Grid.Row="0" Grid.Column="7" Content="Избранное" Foreground="{Binding ForegroundLetters}"></Button>
+                <Button HorizontalAlignment="Right" Click="Favorites" FontWeight="Bold" FontStyle="25" Margin="15,0,0,0" Grid.Row="0" Grid.Column="7" Content="Избранное" Foreground="{Binding ForegroundLetters}"></Button>
+                <Button HorizontalAlignment="Right" Click="SearchCritick" FontWeight="Bold" FontStyle="25" Margin="15,0,0,0" Grid.Row="0" Grid.Column="8" Content="Критики" Foreground="{Binding ForegroundLetters}"></Button>
             </Grid>
         </StackPanel>
         <ScrollViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5">
@@ -72,13 +75,21 @@
                         <ColumnDefinition Width="Auto"></ColumnDefinition>
                         <ColumnDefinition Width="Auto"></ColumnDefinition>
                         <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <Label Margin="10,0,0,0" Content="Сортировка по дате {В формате год-месяц-день}: От  " VerticalAlignment="Center" Grid.Column="0" FontWeight="Bold" FontFamily="Comic Sans MS" Foreground="{Binding ForegroundLetters}"></Label>
+                    <Label Margin="10,0,0,0" Content="Сортировка по дате: От  " VerticalAlignment="Center" Grid.Column="0" FontWeight="Bold" FontFamily="Comic Sans MS" Foreground="{Binding ForegroundLetters}"></Label>
                     <TextBox Watermark="2021-12-31" Width="150" Grid.Column="1" x:Name="DateOut_OT"></TextBox>
                     <Label Content="До" VerticalAlignment="Center" Grid.Column="2" FontWeight="Bold" FontFamily="Comic Sans MS" Foreground="{Binding ForegroundLetters}"></Label>
                     <TextBox Watermark="2022-12-31" Width="150" Grid.Column="3" x:Name="DateOut_DO"></TextBox>
                     <Button HorizontalAlignment="Right" Click="SortDate" FontWeight="Bold" FontStyle="25" Grid.Column="4" Margin="10,0,0,0" Content="Сортировать" Foreground="{Binding ForegroundLetters}"></Button>
                     <Label Grid.Column="5" x:Name="Time" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10,0,0,0"></Label>
+                    <Menu Grid.Column="6">
+                        <MenuItem>
+                            <Button Content="Уже просмотренно"></Button>
+                            <Button Content="Добавить свой обзор"></Button>
+                            <Button Content="Очистить избранные"></Button>
+                        </MenuItem>
+                    </Menu>
                 </Grid>
             </StackPanel>
         </ScrollViewer>
@@ -86,7 +97,7 @@
             <StackPanel>
                 <ScrollViewer>
                     <StackPanel IsVisible="True" x:Name="MainDataGrid">
-                        <DataGrid CopyingRowClipboardContent="MyDataGrid_OnCopyingRowClipboardContent" Name="MyDataGrid" x:Name="DataGridFilms" IsReadOnly="True" Foreground="{Binding ForegroundLetters}" AutoGenerateColumns="False" FontWeight="Bold" FontFamily="Franklin Gothic Medium" FontSize="14">
+                        <DataGrid Name="MyDataGrid" x:Name="DataGridFilms" IsReadOnly="True" Foreground="{Binding ForegroundLetters}" AutoGenerateColumns="False" FontWeight="Bold" FontFamily="Franklin Gothic Medium" FontSize="14">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Название фильма"  Binding="{Binding Path=TitleFilm}"/>
                             <DataGridTextColumn Header="Рейтинг фильма" Binding="{Binding Path=RatingFilm}" />
@@ -145,6 +156,22 @@
                         <Button Click="SaveNote" Content="Сохранить"></Button>
                     </Menu>
                     <TextBox Width="900" Height="250" x:Name="NotesText" TextWrapping="Wrap" HorizontalAlignment="Center" Margin="10,10,10,10" FontWeight="Bold" FontFamily="Comic Sans MS"></TextBox>
+                </StackPanel>
+                
+                <StackPanel IsVisible="False" x:Name="Criticks">
+                    <Label HorizontalAlignment="Center" Margin="10,0,0,10" Content="Информация о критиках." FontWeight="Bold" FontSize="20" FontFamily="Comic Sans MS"></Label>
+                    <TextBox Width="400" HorizontalAlignment="Center" FontWeight="Bold" FontFamily="Comic Sans MS" x:Name="PlaceWithName"></TextBox>
+                    <Button  Width="400" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Content="Найти" Margin="0,5,0,0" Click="SearchCriticInList"></Button>
+                    <DataGrid x:Name="ListCritics" IsReadOnly="True">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Критик"  Binding="{Binding Path=display_name}"/>
+                        </DataGrid.Columns>
+                        <DataGrid.RowDetailsTemplate>
+                            <DataTemplate>
+                                <TextBlock TextWrapping="Wrap" Text="{Binding Path=bio}"></TextBlock>
+                            </DataTemplate>
+                        </DataGrid.RowDetailsTemplate>
+                    </DataGrid>
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>
