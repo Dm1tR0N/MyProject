@@ -188,6 +188,15 @@ namespace KinoPoisk2.Views
             string url = $"https://api.nytimes.com/svc/movies/v2/reviews/search.json?query={SearchRequest.Text}&api-key={API_KEY}";
             GetApiRequest(url);
             UpdateTime();
+            
+            if (DataGridFilms.IsVisible == false)
+            {
+                DataGridFilms.IsVisible = true;
+                ConfigureSettings.IsVisible = false;
+                NotesPlase.IsVisible = false;
+                Criticks.IsVisible = false;
+                AddRewiew.IsVisible = false;
+            }
         }
 
         private void SortDate(object? sender, RoutedEventArgs e)
@@ -195,6 +204,14 @@ namespace KinoPoisk2.Views
             string url = $"https://api.nytimes.com/svc/movies/v2/reviews/all.json?opening-date={DateOut_OT.Text}:{DateOut_DO.Text}&api-key={API_KEY}";
             GetApiRequest(url);
             UpdateTime();
+            if (DataGridFilms.IsVisible == false)
+            {
+                DataGridFilms.IsVisible = true;
+                ConfigureSettings.IsVisible = false;
+                NotesPlase.IsVisible = false;
+                Criticks.IsVisible = false;
+                AddRewiew.IsVisible = false;
+            }
         }
 
         private void Picks(object? sender, RoutedEventArgs e)
@@ -202,11 +219,19 @@ namespace KinoPoisk2.Views
             string url = $"https://api.nytimes.com/svc/movies/v2/reviews/picks.json?api-key={API_KEY}";
             GetApiRequest(url);
             UpdateTime();
+            if (DataGridFilms.IsVisible == false)
+            {
+                DataGridFilms.IsVisible = true;
+                ConfigureSettings.IsVisible = false;
+                NotesPlase.IsVisible = false;
+                Criticks.IsVisible = false;
+                AddRewiew.IsVisible = false;
+            }
         }
 
         private void ConfigSettings(object? sender, RoutedEventArgs e)
         {
-            if (DataGridFilms.IsVisible == true)
+            if (ConfigureSettings.IsVisible == false)
             {
                 DataGridFilms.IsVisible = false;
                 NotesPlase.IsVisible = false;
@@ -427,6 +452,15 @@ namespace KinoPoisk2.Views
             
             DataGridFilms.Items = Results; // В итоге привязываю калекцию к DataGrid
             
+            if (DataGridFilms.IsVisible == false)
+            {
+                DataGridFilms.IsVisible = true;
+                ConfigureSettings.IsVisible = false;
+                NotesPlase.IsVisible = false;
+                Criticks.IsVisible = false;
+                AddRewiew.IsVisible = false;
+                
+            }
         }
 
         private void DeleteFromfavorite(object? sender, RoutedEventArgs e)
@@ -467,12 +501,10 @@ namespace KinoPoisk2.Views
             if (Criticks.IsVisible == false)
             {
                 DataGridFilms.IsVisible = false;
+                NotesPlase.IsVisible = false;
+                ConfigureSettings.IsVisible = false;
                 Criticks.IsVisible = true;
-            }
-            else
-            {
-                DataGridFilms.IsVisible = true;
-                Criticks.IsVisible = false;
+                AddRewiew.IsVisible = false;
             }
         }
 
@@ -574,6 +606,14 @@ namespace KinoPoisk2.Views
             Time.Content = "Список просмотренных фильмов.";
             
             DataGridFilms.Items = Results; // В итоге привязываю калекцию к DataGrid
+            if (DataGridFilms.IsVisible == false)
+            {
+                DataGridFilms.IsVisible = true;
+                ConfigureSettings.IsVisible = false;
+                NotesPlase.IsVisible = false;
+                Criticks.IsVisible = false;
+                AddRewiew.IsVisible = false;
+            }
         }
 
         private void AddOverview(object? sender, RoutedEventArgs e)
@@ -594,6 +634,7 @@ namespace KinoPoisk2.Views
 
             if (AddRewiew.IsVisible == false)
             {
+                DataGridFilms.IsVisible = false;
                 AddRewiew.IsVisible = true;
                 Criticks.IsVisible = false;
                 NotesPlase.IsVisible = false;
