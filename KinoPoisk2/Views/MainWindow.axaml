@@ -57,11 +57,19 @@
                 <Label FontWeight="Bold" FontStyle="15" Foreground="{Binding ForegroundLetters}" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Margin="10" FontSize="18" Content="{Binding NameProgram}"></Label>
                 <TextBox Watermark="Название фильма" Width="300" HorizontalAlignment="Right" x:Name="SearchRequest" FontWeight="Bold" FontStyle="25"  Grid.Row="0" Grid.Column="1" Margin="5" Background="{Binding BackgroundProgram}" Foreground="{Binding ForegroundLetters}"></TextBox>
                 <Button HorizontalAlignment="Right" Click="SearchBtn" FontWeight="Bold" FontStyle="25" Margin="15,0,0,0" Grid.Row="0" Grid.Column="2" Content="Поиск" Foreground="{Binding ForegroundLetters}"></Button>
-                <Button HorizontalAlignment="Right" Click="Picks" FontWeight="Bold" FontStyle="25" Margin="15,0,0,0" Grid.Row="0" Grid.Column="4" Content="Выбор критиков" Foreground="{Binding ForegroundLetters}"></Button>
                 <Button Grid.Column="5" Grid.Row="0" x:Name="Profile" Click="ConfigSettings" Margin="20,0,0,0" Content="Информация" FontWeight="Bold" FontStyle="25"></Button>
                 <Button HorizontalAlignment="Right" Click="Notes" FontWeight="Bold" FontStyle="25" Margin="15,0,0,0" Grid.Row="0" Grid.Column="6" Content="Заметки" Foreground="{Binding ForegroundLetters}"></Button>
-                <Button HorizontalAlignment="Right" Click="Favorites" FontWeight="Bold" FontStyle="25" Margin="15,0,0,0" Grid.Row="0" Grid.Column="7" Content="Избранное" Foreground="{Binding ForegroundLetters}"></Button>
-                <Button HorizontalAlignment="Right" Click="SearchCritick" FontWeight="Bold" FontStyle="25" Margin="15,0,0,0" Grid.Row="0" Grid.Column="8" Content="Критики" Foreground="{Binding ForegroundLetters}"></Button>
+                <Button Click="OpenMenuOne" Grid.Column="7" Content="Меню" Margin="15,0,0,0"></Button>
+                <Menu Grid.Column="7" IsEnabled="False" Margin="15,0,0,0">
+                    <MenuItem x:Name="MenuItem_One">
+                        <Button Click="Favorites" Content="Избранное" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"></Button>
+                        <Button Click="SearchCritick" Content="Критики" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"></Button>
+                        <Button Click="Picks" Content="Выбор критиков" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"></Button>
+                        <Button Content="Уже просмотренно" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"></Button>
+                        <Button Content="Добавить свой обзор" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"></Button>
+                        <Button Content="Очистить избранные" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"></Button>
+                    </MenuItem>
+                </Menu>
             </Grid>
         </StackPanel>
         <ScrollViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5">
@@ -83,13 +91,6 @@
                     <TextBox Watermark="2022-12-31" Width="150" Grid.Column="3" x:Name="DateOut_DO"></TextBox>
                     <Button HorizontalAlignment="Right" Click="SortDate" FontWeight="Bold" FontStyle="25" Grid.Column="4" Margin="10,0,0,0" Content="Сортировать" Foreground="{Binding ForegroundLetters}"></Button>
                     <Label Grid.Column="5" x:Name="Time" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10,0,0,0"></Label>
-                    <Menu Grid.Column="6">
-                        <MenuItem>
-                            <Button Content="Уже просмотренно"></Button>
-                            <Button Content="Добавить свой обзор"></Button>
-                            <Button Content="Очистить избранные"></Button>
-                        </MenuItem>
-                    </Menu>
                 </Grid>
             </StackPanel>
         </ScrollViewer>

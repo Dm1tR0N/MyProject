@@ -558,5 +558,10 @@ namespace KinoPoisk2.Views
                                 $"Инофрмация об ощибке в блоке ниже:\n{e1}\n////////////////////////////////////////////////////");
             }
         }
+
+        private void OpenMenuOne(object? sender, RoutedEventArgs e)
+        {
+            MenuItem_One.Open();
+        }
     }
 }
