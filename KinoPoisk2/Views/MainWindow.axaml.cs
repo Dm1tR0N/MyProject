@@ -102,37 +102,7 @@ namespace KinoPoisk2.Views
                                 item.DateOut = "Отсутствует";
                             } // Если поля пусты то заменяю их тексом 
 
-                            var str = item.multimedia.src; // Получаю путь к ссылке на картинку
-                            byte[] photobytes = null; // Заранее создаю пустую переменную для кранение картинки в байт коде
                             
-                            namePhoto = ConvertName(item.TitleFilm); // Делаю название для будущей фотографии без пробелов и спец-знаков
-                            
-                            
-                            using (WebClient client1 = new WebClient())
-                            {
-                                photobytes = client1.DownloadData(str);
-                            }
-                            
-                            
-                            string subpath = $"{now.ToString("dd-MM-yyyy")}"; // Палучаю дату сегодня
-                            DirectoryInfo dirInfo = new DirectoryInfo(path);
-                            if (!dirInfo.Exists)
-                            {
-                                dirInfo.Create();
-                            } // Если папка существует то не буду создавать 
-                            dirInfo.CreateSubdirectory(subpath); // Иначе создам
-                            
-                            pathPhoto = $"{path}\\{now.ToString("dd-MM-yyyy")}\\{namePhoto}_Dm1Tr0N.jpg";
-                            pathPhoto = pathPhoto.Replace(@"\", @"\\");
-                            File.WriteAllBytes(pathPhoto, photobytes); // Добавляю все фотографии в папку с кэшем программы
-                            
-                            Image photo;
-                            photobytes = ImageToByteArrayFromFilePath($"{path}\\{now.ToString("dd-MM-yyyy")}\\{namePhoto}_Dm1Tr0N.jpg"); // Перевожу картинку в масив байт
-                            photo = ByteArrayToImagebyMemoryStream(photobytes); // Перевожу масив байт в картинку
-                        
-                            Multimedia editMult = new Multimedia(item.multimedia.type, item.multimedia.src, item.multimedia.width, item.multimedia.height, photo);
-                            Multimedias.Add(editMult); 
-                            Links.Add(new Link(item.link.type, item.link.url, item.link.suggested_link_text));
                             Results.Add(new Result(item.TitleFilm, item.DopTitle, item.DiscriptionFilm, item.Author, item.RatingFilm, item.DatePublic, item.DateOut, item.DateUpdatePost, item.multimedia, item.link));
                             // Заполняю калассы данными
                         }
@@ -459,6 +429,7 @@ namespace KinoPoisk2.Views
             Results.Clear(); // Чищу класс Результатов на тот случай если оно заполнен
 
             UpdateFavorites();
+            Time.Content = "Список избранных фильмов";
             
             DataGridFilms.Items = Results; // В итоге привязываю калекцию к DataGrid
             
@@ -562,6 +533,135 @@ namespace KinoPoisk2.Views
         private void OpenMenuOne(object? sender, RoutedEventArgs e)
         {
             MenuItem_One.Open();
+        }
+        
+        public void UpdateAlreadyWatched()
+        {
+            string sqlExpression = "SELECT * FROM AlreadyWatche";
+            using (var connection = new SqliteConnection("Data Source=" + connectionString))
+            {
+                connection.Open();
+
+                SqliteCommand command1 = new SqliteCommand(sqlExpression, connection);
+                using (SqliteDataReader reader = command1.ExecuteReader())
+                {
+                    string LinkFilm_Unique;
+                    if (reader.HasRows) // если есть данные
+                    {
+                        while (reader.Read()) // построчно считываем данные
+                        {
+                            var Link = Convert.ToString(reader.GetValue(0));
+                            string TitleFilm = Convert.ToString(reader.GetValue(1));
+                            var RatingFilm = Convert.ToString(reader.GetValue(2));
+                            var Pick = Convert.ToString(reader.GetValue(3));
+                            var Author = Convert.ToString(reader.GetValue(4));
+                            var DopTitle = Convert.ToString(reader.GetValue(5));
+                            var DiscriptionFilm = Convert.ToString(reader.GetValue(6));
+                            var DatePublic = Convert.ToString(reader.GetValue(7));
+                            var DateOut = Convert.ToString(reader.GetValue(8));
+                            var DateUpdatePost = Convert.ToString(reader.GetValue(9));
+
+                            Debug.WriteLine(
+                                $"{Link} \t {TitleFilm} \t {RatingFilm} \t {Pick} \t {Author} \t {DopTitle} \t {DiscriptionFilm} \t {DatePublic} \t {DateOut} \t {DateUpdatePost}");
+                            var editLink = new Link(null, Link, null);
+                            Results.Add(new Result(TitleFilm, DopTitle, DiscriptionFilm, Author, RatingFilm, DatePublic,
+                                DateOut, DateUpdatePost, null, editLink));
+                        }
+                    }
+                }
+            }
+        }
+        private void AlreadyWatched(object? sender, RoutedEventArgs e)
+        {
+            DataGridFilms.Items = null; // Производится очистка DataGrid на тот случай если там что то есть.
+            Results.Clear(); // Чищу класс Результатов на тот случай если оно заполнен
+
+            UpdateAlreadyWatched();
+            Time.Content = "Список просмотренных фильмов.";
+            
+            DataGridFilms.Items = Results; // В итоге привязываю калекцию к DataGrid
+        }
+
+        private void AddOverview(object? sender, RoutedEventArgs e)
+        {
+            
+            
+        }
+
+        private void ClearFavorites(object? sender, RoutedEventArgs e) // Чистит избранные
+        {
+            string sqlExpression = "DELETE  FROM Favorites";
+            using (var connection = new SqliteConnection("Data Source=" + connectionString))
+            {
+                connection.Open();
+ 
+                SqliteCommand command = new SqliteCommand(sqlExpression, connection);
+ 
+                int number = command.ExecuteNonQuery();
+                Time.Content = $"Избранныен очищены! {number} фильма.";
+            }
+            
+            DataGridFilms.Items = null; // Производится очистка DataGrid на тот случай если там что то есть.
+            Results.Clear(); // Чищу класс Результатов на тот случай если оно заполнен
+
+            UpdateFavorites();
+
+            DataGridFilms.Items = Results; // В итоге привязываю калекцию к DataGrid
+        }
+
+        private void AlreadyWatchedAdd(object? sender, RoutedEventArgs e) // Дабовляет уже просмотренные фильмы
+        {
+             string LinkFilm_Unique = ((Result)DataGridFilms.SelectedItem).link.url;
+
+            var SelectedFilm = Results.SingleOrDefault(x => x.link.url == LinkFilm_Unique);
+            
+            string sqlExpression = "SELECT * FROM AlreadyWatche";
+            using (var connection = new SqliteConnection("Data Source=" + connectionString))
+            {
+                connection.Open();
+
+                bool CheckLink = false;
+
+                SqliteCommand command1 = new SqliteCommand(sqlExpression, connection);
+                using (SqliteDataReader reader = command1.ExecuteReader())
+                {
+                    if (reader.HasRows) // если есть данные
+                    {
+                        while (reader.Read()) // построчно считываем данные
+                        {
+                            var Link = Convert.ToString(reader.GetValue(0));
+                            string TitleFilm = Convert.ToString(reader.GetValue(1));
+                            var RatingFilm = Convert.ToString(reader.GetValue(2));
+                            var Pick = Convert.ToString(reader.GetValue(3));
+                            var Author = Convert.ToString(reader.GetValue(4));
+                            var DopTitle = Convert.ToString(reader.GetValue(5));
+                            var DiscriptionFilm = Convert.ToString(reader.GetValue(6));
+                            var DatePublic = Convert.ToString(reader.GetValue(7));
+                            var DateOut = Convert.ToString(reader.GetValue(8));
+                            var DateUpdatePost = Convert.ToString(reader.GetValue(9));
+
+                            Debug.WriteLine(
+                                $"{Link} \t {TitleFilm} \t {RatingFilm} \t {Pick} \t {Author} \t {DopTitle} \t {DiscriptionFilm} \t {DatePublic} \t {DateOut} \t {DateUpdatePost}");
+                        }
+                    }
+                }
+
+
+                try
+                {
+                    SqliteCommand command = new SqliteCommand();
+                    command.Connection = connection;
+                    command.CommandText =
+                        $"INSERT INTO AlreadyWatche (Link, TitleFilm, RatingFilm, Pick, Author, DopTitle, DiscriptionFilm, DatePublic, DateOut, DateUpdatePost) " +
+                        $"VALUES ('{SelectedFilm.link.url}', '{SelectedFilm.TitleFilm}', '{SelectedFilm.RatingFilm}', '{SelectedFilm.Pick}', '{SelectedFilm.Author}', '{SelectedFilm.DopTitle}', '{SelectedFilm.DiscriptionFilm}', '{SelectedFilm.DatePublic}', '{SelectedFilm.DateOut}', '{SelectedFilm.DateUpdatePost}')";
+                    Time.Content = "Добавлен! " + SelectedFilm.TitleFilm;
+                    int number = command.ExecuteNonQuery();
+                }
+                catch (Exception exception)
+                {
+                    Time.Content = SelectedFilm.TitleFilm + " Уже есть!";
+                }
+            }
         }
     }
 }

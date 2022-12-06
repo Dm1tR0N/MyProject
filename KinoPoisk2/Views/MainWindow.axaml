@@ -65,9 +65,9 @@
                         <Button Click="Favorites" Content="Избранное" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"></Button>
                         <Button Click="SearchCritick" Content="Критики" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"></Button>
                         <Button Click="Picks" Content="Выбор критиков" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"></Button>
-                        <Button Content="Уже просмотренно" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"></Button>
-                        <Button Content="Добавить свой обзор" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"></Button>
-                        <Button Content="Очистить избранные" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"></Button>
+                        <Button Click="AlreadyWatched" Content="Уже просмотренно" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"></Button>
+                        <Button Click="AddOverview" Content="Добавить свой обзор" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"></Button>
+                        <Button Click="ClearFavorites" Content="Очистить избранные" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"></Button>
                     </MenuItem>
                 </Menu>
             </Grid>
@@ -122,6 +122,7 @@
                                             <RowDefinition></RowDefinition>
                                             <RowDefinition></RowDefinition>
                                             <RowDefinition></RowDefinition>
+                                            <RowDefinition></RowDefinition>
                                         </Grid.RowDefinitions>
                                         <TextBlock Grid.Column="0" Grid.Row="0" Text="Автор этой записи в NewYork Times: " />
                                         <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Path=Author}" />
@@ -132,6 +133,7 @@
                                         
                                         <Button x:Name="AddFavorite" Click="Button_OnClick" Grid.Column="3" Grid.Row="3" HorizontalAlignment="Right" VerticalAlignment="Bottom" Content="В избранное" Margin="10,0,0,0"></Button>
                                         <Button x:Name="DeleteFavorite" Click="DeleteFromfavorite" Grid.Column="2" Grid.Row="3" HorizontalAlignment="Right" VerticalAlignment="Bottom" Content="Удалить с Избранного" Margin="10,0,0,0"></Button>
+                                        <Button x:Name="" Click="AlreadyWatchedAdd" Grid.Column="4" Grid.Row="3" HorizontalAlignment="Right" VerticalAlignment="Bottom" Content="Просмотрен" Margin="10,0,0,0"></Button>
                                     </Grid>
                                 </StackPanel>
                             </DataTemplate>
