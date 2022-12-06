@@ -584,8 +584,28 @@ namespace KinoPoisk2.Views
 
         private void AddOverview(object? sender, RoutedEventArgs e)
         {
-            
-            
+            // using (var connection = new SqliteConnection("Data Source=" + connectionString))
+            // {
+            //     // connection.Open();
+            //     // SqliteCommand command = new SqliteCommand();
+            //     // command.Connection = connection;
+            //     // command.CommandText = "CREATE TABLE MyReview(Link TEXT NOT NULL PRIMARY KEY UNIQUE, TitleFilm TEXT NOT NULL, RatingFilm TEXT NOT NULL, Pick TEXT NOT NULL, Author TEXT NOT NULL, DopTitle TEXT NOT NULL, DiscriptionFilm TEXT NOT NULL, DatePublic TEXT NOT NULL, DateOut TEXT NOT NULL, DateUpdatePost TEXT NOT NULL)";
+            //     // command.ExecuteNonQuery();
+            //     //
+            //     // Debug.WriteLine("Таблица MyReview создана");
+            //     
+            //     
+            // }
+
+
+            if (AddRewiew.IsVisible == false)
+            {
+                AddRewiew.IsVisible = true;
+                Criticks.IsVisible = false;
+                NotesPlase.IsVisible = false;
+                ConfigureSettings.IsVisible = false;
+                MainDataGrid.IsVisible = false;
+            }
         }
 
         private void ClearFavorites(object? sender, RoutedEventArgs e) // Чистит избранные
@@ -611,7 +631,7 @@ namespace KinoPoisk2.Views
 
         private void AlreadyWatchedAdd(object? sender, RoutedEventArgs e) // Дабовляет уже просмотренные фильмы
         {
-             string LinkFilm_Unique = ((Result)DataGridFilms.SelectedItem).link.url;
+            string LinkFilm_Unique = ((Result)DataGridFilms.SelectedItem).link.url;
 
             var SelectedFilm = Results.SingleOrDefault(x => x.link.url == LinkFilm_Unique);
             
