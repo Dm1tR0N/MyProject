@@ -66,7 +66,7 @@
                         <Button Click="SearchCritick" Content="Критики" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"></Button>
                         <Button Click="Picks" Content="Выбор критиков" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"></Button>
                         <Button Click="AlreadyWatched" Content="Уже просмотренно" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"></Button>
-                        <Button Click="AddOverview" Content="Добавить свой обзор" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"></Button>
+                        <!-- <Button Click="AddOverview" Content="Добавить свой обзор" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"></Button> -->
                         <Button Click="ClearFavorites" Content="Очистить избранные" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"></Button>
                     </MenuItem>
                 </Menu>
@@ -142,14 +142,14 @@
                     </StackPanel>
                 </ScrollViewer>
                 
-                <Border IsVisible="False" x:Name="ConfigureSettings" Width="600" CornerRadius="20" Background="#3C3B3B">
+                <Border IsVisible="False" x:Name="ConfigureSettings" CornerRadius="20" Background="#3C3B3B">
                     <StackPanel >
                         <Label HorizontalAlignment="Center" Margin="10,0,0,0" Content="Справочная информация." FontWeight="Bold" FontSize="20" FontFamily="Comic Sans MS"></Label>
                         <Menu HorizontalAlignment="Center">
                             <Button Click="AboutProgrammer" Content="О разроботчеке"></Button>
                             <Button Click="AboutProgramm" Content="О приложении"></Button>
                         </Menu>
-                        <TextBlock x:Name="AboutText" HorizontalAlignment="Center" Margin="10,10,10,10" FontWeight="Bold" FontFamily="Comic Sans MS"></TextBlock>
+                        <TextBlock x:Name="AboutText" HorizontalAlignment="Center" Margin="10,10,10,20" FontWeight="Bold" FontFamily="Comic Sans MS"></TextBlock>
                         <Image x:Name="ImageTeh" Source="/Assets/imageTeh.jpg" Height="256" Width="256"></Image>
                     </StackPanel>
                 </Border>

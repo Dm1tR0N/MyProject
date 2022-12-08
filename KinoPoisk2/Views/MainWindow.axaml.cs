@@ -112,6 +112,7 @@ namespace KinoPoisk2.Views
                         }
                     }
                     DataGridFilms.Items = Results; // В итоге привязываю калекцию к DataGrid
+                    DataGridFilms.IsVisible = true;
                     Debug.WriteLine($"Запрос к API выполнен успешно!");
                 }
             }
@@ -131,20 +132,7 @@ namespace KinoPoisk2.Views
         public MainWindow()
         {
             InitializeComponent();
-            
-            /*
-             * 
-             * На момент 25.11.2022 я застрял на проблеме того что не могу вывести картинку для
-             * Фильма пробовал много способов но пока что не выходит
-             *
-             * Для потанциальных читателей этого кода потарался все сделать понятным
-             * и закоментирал что считаю нужным
-             * 
-             * by Dm1Tr0N
-             * 
-             */
-            
-            
+
             string url = $"https://api.nytimes.com/svc/movies/v2/reviews/all.json?api-key={API_KEY}";
             GetApiRequest(url);
             UpdateTime();
@@ -181,6 +169,7 @@ namespace KinoPoisk2.Views
                 NotesText.Text = "Нет сохраненной заметки!";
             }
 
+            DataGridFilms.IsVisible = true;
         }
         
         private void SearchBtn(object? sender, RoutedEventArgs e)
@@ -189,14 +178,13 @@ namespace KinoPoisk2.Views
             GetApiRequest(url);
             UpdateTime();
             
-            if (DataGridFilms.IsVisible == false)
-            {
+         
                 DataGridFilms.IsVisible = true;
                 ConfigureSettings.IsVisible = false;
                 NotesPlase.IsVisible = false;
                 Criticks.IsVisible = false;
                 AddRewiew.IsVisible = false;
-            }
+            
         }
 
         private void SortDate(object? sender, RoutedEventArgs e)
@@ -204,14 +192,13 @@ namespace KinoPoisk2.Views
             string url = $"https://api.nytimes.com/svc/movies/v2/reviews/all.json?opening-date={DateOut_OT.Text}:{DateOut_DO.Text}&api-key={API_KEY}";
             GetApiRequest(url);
             UpdateTime();
-            if (DataGridFilms.IsVisible == false)
-            {
-                DataGridFilms.IsVisible = true;
-                ConfigureSettings.IsVisible = false;
-                NotesPlase.IsVisible = false;
-                Criticks.IsVisible = false;
-                AddRewiew.IsVisible = false;
-            }
+       
+            DataGridFilms.IsVisible = true;
+            ConfigureSettings.IsVisible = false;
+            NotesPlase.IsVisible = false;
+            Criticks.IsVisible = false;
+            AddRewiew.IsVisible = false;
+            
         }
 
         private void Picks(object? sender, RoutedEventArgs e)
@@ -219,26 +206,23 @@ namespace KinoPoisk2.Views
             string url = $"https://api.nytimes.com/svc/movies/v2/reviews/picks.json?api-key={API_KEY}";
             GetApiRequest(url);
             UpdateTime();
-            if (DataGridFilms.IsVisible == false)
-            {
-                DataGridFilms.IsVisible = true;
-                ConfigureSettings.IsVisible = false;
-                NotesPlase.IsVisible = false;
-                Criticks.IsVisible = false;
-                AddRewiew.IsVisible = false;
-            }
+            DataGridFilms.IsVisible = true;
+            ConfigureSettings.IsVisible = false;
+            NotesPlase.IsVisible = false;
+            Criticks.IsVisible = false;
+            AddRewiew.IsVisible = false;
+            
         }
 
         private void ConfigSettings(object? sender, RoutedEventArgs e)
         {
-            if (ConfigureSettings.IsVisible == false)
-            {
-                DataGridFilms.IsVisible = false;
-                NotesPlase.IsVisible = false;
-                ConfigureSettings.IsVisible = true;
-                Criticks.IsVisible = false;
-                AddRewiew.IsVisible = false;
-            }
+
+            DataGridFilms.IsVisible = false;
+            NotesPlase.IsVisible = false;
+            ConfigureSettings.IsVisible = true;
+            Criticks.IsVisible = false;
+            AddRewiew.IsVisible = false;
+            
             UpdateTime();
         }
 
@@ -275,52 +259,14 @@ namespace KinoPoisk2.Views
 
         private void Notes(object? sender, RoutedEventArgs e)
         {
-            if (NotesPlase.IsVisible == false)
-            {
-                ConfigureSettings.IsVisible = false;
-                DataGridFilms.IsVisible = false;
-                NotesPlase.IsVisible = true;
-                Criticks.IsVisible = false;
-                AddRewiew.IsVisible = false;
-            }
+            ConfigureSettings.IsVisible = false;
+            DataGridFilms.IsVisible = false;
+            NotesPlase.IsVisible = true;
+            Criticks.IsVisible = false;
+            AddRewiew.IsVisible = false;
+            
             UpdateTime();
         }
-
-        // private void OpenNote(object? sender, RoutedEventArgs e)
-        // {
-        //     string text = "";
-        //     string pathTxt = "";
-        //
-        //     try
-        //     {
-        //         DateTime now = DateTime.Now;
-        //         string myDocuments = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments); // Получаю путь к папки Мои документы
-        //         string path = myDocuments + "\\MyMovie"; // Добовляю название проекта
-        //
-        //         pathTxt = $"{path}\\Notes.txt";
-        //     
-        //         using (StreamReader fs = new StreamReader(pathTxt))
-        //         {
-        //             while (true)
-        //             {
-        //                 // Читаем строку из файла во временную переменную.
-        //                 string temp = fs.ReadLine();
-        //
-        //                 // Если достигнут конец файла, прерываем считывание.
-        //                 if(temp == null) break;
-        //
-        //                 // Пишем считанную строку в итоговую переменную.
-        //                 text  += temp + "\n";
-        //             }
-        //         }
-        //         NotesText.Text = text;
-        //     }
-        //     catch (Exception exception)
-        //     {
-        //         NotesText.Text = "Нет сохраненной заметки!";
-        //     }
-        //     UpdateTime();
-        // }
 
         private void SaveNote(object? sender, RoutedEventArgs e)
         {
@@ -452,15 +398,13 @@ namespace KinoPoisk2.Views
             
             DataGridFilms.Items = Results; // В итоге привязываю калекцию к DataGrid
             
-            if (DataGridFilms.IsVisible == false)
-            {
-                DataGridFilms.IsVisible = true;
-                ConfigureSettings.IsVisible = false;
-                NotesPlase.IsVisible = false;
-                Criticks.IsVisible = false;
-                AddRewiew.IsVisible = false;
+            DataGridFilms.IsVisible = true;
+            ConfigureSettings.IsVisible = false;
+            NotesPlase.IsVisible = false;
+            Criticks.IsVisible = false;
+            AddRewiew.IsVisible = false;
                 
-            }
+            
         }
 
         private void DeleteFromfavorite(object? sender, RoutedEventArgs e)
@@ -498,14 +442,12 @@ namespace KinoPoisk2.Views
 
         private void SearchCritick(object? sender, RoutedEventArgs e)
         {
-            if (Criticks.IsVisible == false)
-            {
-                DataGridFilms.IsVisible = false;
-                NotesPlase.IsVisible = false;
-                ConfigureSettings.IsVisible = false;
-                Criticks.IsVisible = true;
-                AddRewiew.IsVisible = false;
-            }
+
+            DataGridFilms.IsVisible = false;
+            NotesPlase.IsVisible = false;
+            ConfigureSettings.IsVisible = false;
+            Criticks.IsVisible = true;
+            AddRewiew.IsVisible = false;
         }
 
         private void SearchCriticInList(object? sender, RoutedEventArgs e)
@@ -606,15 +548,12 @@ namespace KinoPoisk2.Views
             Time.Content = "Список просмотренных фильмов.";
             
             DataGridFilms.Items = Results; // В итоге привязываю калекцию к DataGrid
-            if (DataGridFilms.IsVisible == false)
-            {
-                DataGridFilms.IsVisible = true;
-                ConfigureSettings.IsVisible = false;
-                NotesPlase.IsVisible = false;
-                Criticks.IsVisible = false;
-                AddRewiew.IsVisible = false;
+            DataGridFilms.IsVisible = true;
+            ConfigureSettings.IsVisible = false;
+            NotesPlase.IsVisible = false;
+            Criticks.IsVisible = false;
+            AddRewiew.IsVisible = false;
             }
-        }
 
         private void AddOverview(object? sender, RoutedEventArgs e)
         {
@@ -630,17 +569,14 @@ namespace KinoPoisk2.Views
             //     
             //     
             // }
-
-
-            if (AddRewiew.IsVisible == false)
-            {
-                DataGridFilms.IsVisible = false;
-                AddRewiew.IsVisible = true;
-                Criticks.IsVisible = false;
-                NotesPlase.IsVisible = false;
-                ConfigureSettings.IsVisible = false;
-                MainDataGrid.IsVisible = false;
-            }
+            
+            DataGridFilms.IsVisible = false;
+            AddRewiew.IsVisible = true;
+            Criticks.IsVisible = false;
+            NotesPlase.IsVisible = false;
+            ConfigureSettings.IsVisible = false;
+            MainDataGrid.IsVisible = false;
+            
         }
 
         private void ClearFavorites(object? sender, RoutedEventArgs e) // Чистит избранные
