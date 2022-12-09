@@ -7,7 +7,7 @@ namespace UnitTests;
 public class UnitTest1
 {
     [Fact]
-    public void SearchBtn_Testing()
+    public void DeleteBr_Testing()
     {
         // arange
         string textForTest = "A. O. Scott joined The New York Times as a film critic in January 2000," +
@@ -44,7 +44,8 @@ public class UnitTest1
         
         // act
 
-        MainWindow window = new MainWindow();
+        var window = new MainWindow();
+        window.InitializeComponent();
         string outMethod = window.DeleteBr(textForTest);
         // assert
         Assert.Equal(correctText, outMethod);
