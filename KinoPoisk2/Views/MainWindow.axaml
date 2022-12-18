@@ -101,7 +101,7 @@
                         <DataGrid Name="MyDataGrid" x:Name="DataGridFilms" IsVisible="True" IsReadOnly="True" Foreground="{Binding ForegroundLetters}" AutoGenerateColumns="False" FontWeight="Bold" FontFamily="Franklin Gothic Medium" FontSize="14">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Название фильма"  Binding="{Binding Path=TitleFilm}"/>
-                                <DataGridTextColumn Header="Рейтинг фильма" Binding="{Binding Path=RatingFilm}" />
+                                <DataGridTextColumn Header="Возрастное ограничение" Binding="{Binding Path=RatingFilm}" />
                                 <DataGridTextColumn Header="Дата выхода" Binding="{Binding Path=DateOut}" />
                                 <DataGridTextColumn Header="Дата пуликации обзора" Binding="{Binding Path=DatePublic}" />
                             </DataGrid.Columns>
@@ -132,7 +132,7 @@
                                             <TextBox Grid.Column="1" Grid.Row="3" IsReadOnly="True" Width="400" Text="{Binding Path=link.url}" TextWrapping="Wrap"/>
                                             
                                             <Button x:Name="AddFavorite" Click="Button_OnClick" Grid.Column="3" Grid.Row="3" HorizontalAlignment="Right" VerticalAlignment="Bottom" Content="В избранное" Margin="10,0,0,0"></Button>
-                                            <Button x:Name="DeleteFavorite" Click="DeleteFromfavorite" Grid.Column="2" Grid.Row="3" HorizontalAlignment="Right" VerticalAlignment="Bottom" Content="Удалить с Избранного" Margin="10,0,0,0"></Button>
+                                            <Button x:Name="DeleteFavorite" Click="DeleteFromfavorite" Grid.Column="2" Grid.Row="3" HorizontalAlignment="Right" VerticalAlignment="Bottom" Content="Удалить из Избранного" Margin="10,0,0,0"></Button>
                                             <Button x:Name="" Click="AlreadyWatchedAdd" Grid.Column="4" Grid.Row="3" HorizontalAlignment="Right" VerticalAlignment="Bottom" Content="Просмотрен" Margin="10,0,0,0"></Button>
                                         </Grid>
                                     </StackPanel>
@@ -146,7 +146,7 @@
                     <StackPanel >
                         <Label HorizontalAlignment="Center" Margin="10,0,0,0" Content="Справочная информация." FontWeight="Bold" FontSize="20" FontFamily="Comic Sans MS"></Label>
                         <Menu HorizontalAlignment="Center">
-                            <Button Click="AboutProgrammer" Content="О разроботчеке"></Button>
+                            <Button Click="AboutProgrammer" Content="О разработчике"></Button>
                             <Button Click="AboutProgramm" Content="О приложении"></Button>
                         </Menu>
                         <TextBlock x:Name="AboutText" HorizontalAlignment="Center" Margin="10,10,10,20" FontWeight="Bold" FontFamily="Comic Sans MS"></TextBlock>

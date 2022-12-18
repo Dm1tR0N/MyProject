@@ -36,7 +36,8 @@ namespace KinoPoisk2.Views
 
         public string API_KEY = "5rBE8RxfB49Cr3r2wVbDtevufGJmYLxD"; // Является ключом доступа к API
         public string connectionString = @"D:\КУРСАЧ\KinoPoisk2New\KinoPoisk2\Models\Chinook.db";
-        
+
+
         public string path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\MyMovie"; // Получаю путь к папки Мои документы
 
         public static byte[] ImageToByteArrayFromFilePath(string imagefilePath) // Метод для перевода ссылки на картинку в масив байт
@@ -102,14 +103,16 @@ namespace KinoPoisk2.Views
                                 item.DateOut = "Отсутствует";
                             } // Если поля пусты то заменяю их тексом 
 
-                            
+
                             Results.Add(new Result(item.TitleFilm, item.DopTitle, item.DiscriptionFilm, item.Author, item.RatingFilm, item.DatePublic, item.DateOut, item.DateUpdatePost, item.multimedia, item.link));
                             // Заполняю калассы данными
                         }
                         else
                         {
                             Debug.Write("-> Увы, Нечего не найдено. ✘\n");
+                            Time.Content = "Увы, Нечего не найдено. ✘";
                         }
+                        Debug.Write("-> Точки условий запроса к API пройдена\n");
                     }
                     DataGridFilms.Items = Results; // В итоге привязываю калекцию к DataGrid
                     DataGridFilms.IsVisible = true;
@@ -132,7 +135,9 @@ namespace KinoPoisk2.Views
         public MainWindow()
         {
             InitializeComponent();
-
+            
+            
+            
             string url = $"https://api.nytimes.com/svc/movies/v2/reviews/all.json?api-key={API_KEY}";
             GetApiRequest(url);
             UpdateTime();
@@ -176,14 +181,22 @@ namespace KinoPoisk2.Views
         {
             string url = $"https://api.nytimes.com/svc/movies/v2/reviews/search.json?query={SearchRequest.Text}&api-key={API_KEY}";
             GetApiRequest(url);
-            UpdateTime();
+
+            DataGridFilms.IsVisible = true;
+            ConfigureSettings.IsVisible = false;
+            NotesPlase.IsVisible = false;
+            Criticks.IsVisible = false;
+            AddRewiew.IsVisible = false;
+
+            if (Results.Count() < 1 || Results.Count() == null)
+            {
+                Time.Content = $"Запрос на поиск фильма: '{SearchRequest.Text}' Увы, Нечего не дал.";
+            }
+            else if (Results.Count() >= 1 && Results != null)
+            {
+                Time.Content = $"Найдено";
+            }
             
-         
-                DataGridFilms.IsVisible = true;
-                ConfigureSettings.IsVisible = false;
-                NotesPlase.IsVisible = false;
-                Criticks.IsVisible = false;
-                AddRewiew.IsVisible = false;
             
         }
 
@@ -191,27 +204,41 @@ namespace KinoPoisk2.Views
         {
             string url = $"https://api.nytimes.com/svc/movies/v2/reviews/all.json?opening-date={DateOut_OT.Text}:{DateOut_DO.Text}&api-key={API_KEY}";
             GetApiRequest(url);
-            UpdateTime();
-       
+
             DataGridFilms.IsVisible = true;
             ConfigureSettings.IsVisible = false;
             NotesPlase.IsVisible = false;
             Criticks.IsVisible = false;
             AddRewiew.IsVisible = false;
             
+            if (Results.Count() < 1 || Results.Count() == null)
+            {
+                Time.Content = $"Запрос на сортировку дат: '{DateOut_OT} - {DateOut_DO}' Увы, Нечего не дал.";
+            }
+            else if (Results.Count() >= 1 && Results != null)
+            {
+                Time.Content = $"Найдено";
+            }
         }
 
         private void Picks(object? sender, RoutedEventArgs e)
         {
             string url = $"https://api.nytimes.com/svc/movies/v2/reviews/picks.json?api-key={API_KEY}";
             GetApiRequest(url);
-            UpdateTime();
             DataGridFilms.IsVisible = true;
             ConfigureSettings.IsVisible = false;
             NotesPlase.IsVisible = false;
             Criticks.IsVisible = false;
             AddRewiew.IsVisible = false;
             
+            if (Results.Count() < 1 || Results.Count() == null)
+            {
+                Time.Content = $"Запрос на подборку от критиков: Увы, Нечего не дал.";
+            }
+            else if (Results.Count() >= 1 && Results != null)
+            {
+                Time.Content = $"Найдено";
+            }
         }
 
         private void ConfigSettings(object? sender, RoutedEventArgs e)
@@ -229,11 +256,8 @@ namespace KinoPoisk2.Views
         private void AboutProgrammer(object? sender, RoutedEventArgs e)
         {
             AboutText.Text =
-                "Программист: Михайлов Дмитрий Владимирович,\n" +
-                "Но момент 2022 года обучаюсь в Томском Техникуме Информационных Технологий\n" +
-                "Изначально, программирование было моим хобби но в будущем я хотел связать\n" +
-                "это хобби с моей жизнью, В итоге выбрал специальность которая мне подходит\n" +
-                "И сейчас обучаясь на эту специальность пишу эту программу для Курсового проекта";
+                "Разрабочик: Михайлов Дмитрий Владимирович,\n" +
+                "Студент Томского Техникума Информационных Технологий, 606 группа\n";
             ImageTeh.IsVisible = false;
             UpdateTime();
         }
@@ -241,10 +265,9 @@ namespace KinoPoisk2.Views
         private void AboutProgramm(object? sender, RoutedEventArgs e)
         {
             AboutText.Text =
-                "Основная цель создания этого приложения это написание кусового проекта\n" +
+                "Основная цель - создание приложения для кусового проекта\n" +
                 "Побочная цели проекта это:\n" +
                 "   * Изучить новую IDE RIder\n" +
-                "   * Научится работать с REST API\n" +
                 "   * Изучить новую технологию Avolonia\n" +
                 "   * Закрепить знания в C#,XAML\n" +
                 "\n" +
