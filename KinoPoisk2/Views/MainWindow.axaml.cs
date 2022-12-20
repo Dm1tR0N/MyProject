@@ -1,29 +1,15 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
-using System.Runtime.InteropServices.ObjectiveC;
-using Avalonia.Themes.Default;
-using Avalonia.Themes.Fluent;
-using Avalonia.Themes.Fluent.Controls;
 using KinoPoisk2.Models;
-using KinoPoisk2.ViewModels;
 using Newtonsoft.Json;
-using ReactiveUI;
-using Tmds.DBus;
-using System.Drawing;
+using Avalonia.Input;
 using Microsoft.Data.Sqlite;
-using Microsoft.Win32;
-using Color = Avalonia.Media.Color;
-using Image = System.Drawing.Image;
 
 namespace KinoPoisk2.Views
 {
@@ -35,32 +21,9 @@ namespace KinoPoisk2.Views
         public List<ResultCritic> Critics = new List<ResultCritic>();
 
         public string API_KEY = "5rBE8RxfB49Cr3r2wVbDtevufGJmYLxD"; // Является ключом доступа к API
-        public string connectionString = @"D:\КУРСАЧ\KinoPoisk2New\KinoPoisk2\Models\Chinook.db";
-
-
-        public string path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\MyMovie"; // Получаю путь к папки Мои документы
-
-        public static byte[] ImageToByteArrayFromFilePath(string imagefilePath) // Метод для перевода ссылки на картинку в масив байт
-        {
-            byte[] imageArray = File.ReadAllBytes(imagefilePath);
-            return imageArray;
-        }
-        public static Image ByteArrayToImagebyMemoryStream(byte[] imageByte) // Метод для перевода масива байт в картинку
-        {
-            MemoryStream ms = new MemoryStream(imageByte);
-            Image image = Image.FromStream(ms);
-            return image;
-        }
-        public string ConvertName(string str) // Метод который удаляет все лишние символы в сторе
-        {
-            str = str.Replace(":", "_");
-            str = str.Replace(" ", "_");
-            str = str.Replace("!", "_");
-            str = str.Replace(".", "_");
-            str = str.Replace(",", "_");
-            return str;
-        }
+        public string connectionString = @"D:\КУРСАЧ\KinoPoisk2New\KinoPoisk2\Models\Chinook.db"; // Временно
         
+        public string path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\MyMovie"; // Получаю путь к папки Мои документы
         public string DeleteBr(string str) // Метод который удаляет все лишние символы в сторе
         {
             str = str.Replace("<br/><br/>", " ");
@@ -81,11 +44,7 @@ namespace KinoPoisk2.Views
                     // Тут я запрос выполил и получил JSON 
                     
                     Rootobject? result1 = JsonConvert.DeserializeObject<Rootobject>(json); // Десериалезую JSON в классы
-
-                    string namePhoto = "";
-                    string pathPhoto;
-
-
+                    
                     var listFilms = result1.results; // Создаю лист для последущей работы с ним
                     DateTime now = DateTime.Now;
                     foreach (var item in listFilms) // Перебираю всю информацию
@@ -130,14 +89,10 @@ namespace KinoPoisk2.Views
         {
             Time.Content = "Местное время: " + DateTime.Now.ToString("t");
         }
-                                                        
         
         public MainWindow()
         {
             InitializeComponent();
-            
-            
-            
             string url = $"https://api.nytimes.com/svc/movies/v2/reviews/all.json?api-key={API_KEY}";
             GetApiRequest(url);
             UpdateTime();
@@ -179,6 +134,7 @@ namespace KinoPoisk2.Views
         
         private void SearchBtn(object? sender, RoutedEventArgs e)
         {
+            Time.Content = "Выполнение...";
             string url = $"https://api.nytimes.com/svc/movies/v2/reviews/search.json?query={SearchRequest.Text}&api-key={API_KEY}";
             GetApiRequest(url);
 
@@ -202,6 +158,7 @@ namespace KinoPoisk2.Views
 
         private void SortDate(object? sender, RoutedEventArgs e)
         {
+            Time.Content = "Выполнение...";
             string url = $"https://api.nytimes.com/svc/movies/v2/reviews/all.json?opening-date={DateOut_OT.Text}:{DateOut_DO.Text}&api-key={API_KEY}";
             GetApiRequest(url);
 
@@ -213,16 +170,22 @@ namespace KinoPoisk2.Views
             
             if (Results.Count() < 1 || Results.Count() == null)
             {
-                Time.Content = $"Запрос на сортировку дат: '{DateOut_OT} - {DateOut_DO}' Увы, Нечего не дал.";
+                Time.Content = $"Запрос на сортировку дат: '{DateOut_OT.Text} - {DateOut_DO.Text}' Увы, Нечего не дал. Проверьте формат даты";
             }
             else if (Results.Count() >= 1 && Results != null)
             {
                 Time.Content = $"Найдено";
             }
+            else
+            {
+                Time.Content =
+                    "Диапазон дат должен содержать начальную и конечную даты, разделенные двоеточием (например, 1980-01-01:1990-01-01)";
+            }
         }
 
         private void Picks(object? sender, RoutedEventArgs e)
         {
+            Time.Content = "Выполнение...";
             string url = $"https://api.nytimes.com/svc/movies/v2/reviews/picks.json?api-key={API_KEY}";
             GetApiRequest(url);
             DataGridFilms.IsVisible = true;
@@ -315,11 +278,6 @@ namespace KinoPoisk2.Views
             UpdateTime();
         }
 
-        // private void MyDataGrid_OnCopyingRowClipboardContent(object? sender, DataGridRowClipboardEventArgs e)
-        // {
-        //     var text = e.Item;
-        // }
-
         private void Button_OnClick(object? sender, RoutedEventArgs e)
         {
             string LinkFilm_Unique = ((Result)DataGridFilms.SelectedItem).link.url;
@@ -355,8 +313,7 @@ namespace KinoPoisk2.Views
                         }
                     }
                 }
-
-
+                
                 try
                 {
                     SqliteCommand command = new SqliteCommand();
@@ -426,8 +383,6 @@ namespace KinoPoisk2.Views
             NotesPlase.IsVisible = false;
             Criticks.IsVisible = false;
             AddRewiew.IsVisible = false;
-                
-            
         }
 
         private void DeleteFromfavorite(object? sender, RoutedEventArgs e)
@@ -465,7 +420,6 @@ namespace KinoPoisk2.Views
 
         private void SearchCritick(object? sender, RoutedEventArgs e)
         {
-
             DataGridFilms.IsVisible = false;
             NotesPlase.IsVisible = false;
             ConfigureSettings.IsVisible = false;
@@ -577,31 +531,7 @@ namespace KinoPoisk2.Views
             Criticks.IsVisible = false;
             AddRewiew.IsVisible = false;
             }
-
-        private void AddOverview(object? sender, RoutedEventArgs e)
-        {
-            // using (var connection = new SqliteConnection("Data Source=" + connectionString))
-            // {
-            //     // connection.Open();
-            //     // SqliteCommand command = new SqliteCommand();
-            //     // command.Connection = connection;
-            //     // command.CommandText = "CREATE TABLE MyReview(Link TEXT NOT NULL PRIMARY KEY UNIQUE, TitleFilm TEXT NOT NULL, RatingFilm TEXT NOT NULL, Pick TEXT NOT NULL, Author TEXT NOT NULL, DopTitle TEXT NOT NULL, DiscriptionFilm TEXT NOT NULL, DatePublic TEXT NOT NULL, DateOut TEXT NOT NULL, DateUpdatePost TEXT NOT NULL)";
-            //     // command.ExecuteNonQuery();
-            //     //
-            //     // Debug.WriteLine("Таблица MyReview создана");
-            //     
-            //     
-            // }
-            
-            DataGridFilms.IsVisible = false;
-            AddRewiew.IsVisible = true;
-            Criticks.IsVisible = false;
-            NotesPlase.IsVisible = false;
-            ConfigureSettings.IsVisible = false;
-            MainDataGrid.IsVisible = false;
-            
-        }
-
+        
         private void ClearFavorites(object? sender, RoutedEventArgs e) // Чистит избранные
         {
             string sqlExpression = "DELETE  FROM Favorites";
@@ -612,7 +542,7 @@ namespace KinoPoisk2.Views
                 SqliteCommand command = new SqliteCommand(sqlExpression, connection);
  
                 int number = command.ExecuteNonQuery();
-                Time.Content = $"Избранныен очищены! {number} фильма.";
+                Time.Content = $"Избранныен очищены! Было удалено {number} фильм(а/ов).";
             }
             
             DataGridFilms.Items = null; // Производится очистка DataGrid на тот случай если там что то есть.
@@ -659,8 +589,7 @@ namespace KinoPoisk2.Views
                         }
                     }
                 }
-
-
+                
                 try
                 {
                     SqliteCommand command = new SqliteCommand();
@@ -674,6 +603,30 @@ namespace KinoPoisk2.Views
                 catch (Exception exception)
                 {
                     Time.Content = SelectedFilm.TitleFilm + " Уже есть!";
+                }
+            }
+        }
+
+        private void SearchEnter(object? sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                string url = $"https://api.nytimes.com/svc/movies/v2/reviews/search.json?query={SearchRequest.Text}&api-key={API_KEY}";
+                GetApiRequest(url);
+
+                DataGridFilms.IsVisible = true;
+                ConfigureSettings.IsVisible = false;
+                NotesPlase.IsVisible = false;
+                Criticks.IsVisible = false;
+                AddRewiew.IsVisible = false;
+
+                if (Results.Count() < 1 || Results.Count() == null)
+                {
+                    Time.Content = $"Запрос на поиск фильма: '{SearchRequest.Text}' Увы, Нечего не дал.";
+                }
+                else if (Results.Count() >= 1 && Results != null)
+                {
+                    Time.Content = $"Что-то найдено";
                 }
             }
         }

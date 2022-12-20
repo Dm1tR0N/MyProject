@@ -55,7 +55,7 @@
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <Label FontWeight="Bold" FontStyle="15" Foreground="{Binding ForegroundLetters}" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Margin="10" FontSize="18" Content="{Binding NameProgram}"></Label>
-                <TextBox Watermark="Название фильма" Width="300" HorizontalAlignment="Right" x:Name="SearchRequest" FontWeight="Bold" FontStyle="25"  Grid.Row="0" Grid.Column="1" Margin="5" Background="{Binding BackgroundProgram}" Foreground="{Binding ForegroundLetters}"></TextBox>
+                <TextBox Watermark="Название фильма" Width="300" HorizontalAlignment="Right" x:Name="SearchRequest" FontWeight="Bold" FontStyle="25"  Grid.Row="0" Grid.Column="1" Margin="5" Background="{Binding BackgroundProgram}" Foreground="{Binding ForegroundLetters}" KeyDown="SearchEnter"></TextBox>
                 <Button HorizontalAlignment="Right" Click="SearchBtn" FontWeight="Bold" FontStyle="25" Margin="15,0,0,0" Grid.Row="0" Grid.Column="2" Content="Поиск" Foreground="{Binding ForegroundLetters}"></Button>
                 <Button Grid.Column="5" Grid.Row="0" x:Name="Profile" Click="ConfigSettings" Margin="20,0,0,0" Content="Информация" FontWeight="Bold" FontStyle="25"></Button>
                 <Button HorizontalAlignment="Right" Click="Notes" FontWeight="Bold" FontStyle="25" Margin="15,0,0,0" Grid.Row="0" Grid.Column="6" Content="Заметки" Foreground="{Binding ForegroundLetters}"></Button>
