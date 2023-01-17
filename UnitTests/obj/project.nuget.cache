@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "RHF0XX9WbJsfgFnYP16ATjDQ9jo85iir49+sh8jWj7NJh6e2dm0VPp8SKKd+KcpIAv35M4PVDIB3GDwYOsfLVg==",
+  "dgSpecHash": "nIDb8msAgPchwKbnV60KI3RKbTYKwNIBXMzLejbQIFAjxHI4uniyCrrMRCqUYla6ZvBSHo0WDOGy0ymtuoEboA==",
   "success": true,
   "projectFilePath": "D:\\КУРСАЧ\\KinoPoisk2New\\UnitTests\\UnitTests.csproj",
   "expectedPackageFiles": [
@@ -163,7 +163,10 @@
     "C:\\Users\\Александр\\.nuget\\packages\\xunit.core\\2.4.1\\xunit.core.2.4.1.nupkg.sha512",
     "C:\\Users\\Александр\\.nuget\\packages\\xunit.extensibility.core\\2.4.1\\xunit.extensibility.core.2.4.1.nupkg.sha512",
     "C:\\Users\\Александр\\.nuget\\packages\\xunit.extensibility.execution\\2.4.1\\xunit.extensibility.execution.2.4.1.nupkg.sha512",
-    "C:\\Users\\Александр\\.nuget\\packages\\xunit.runner.visualstudio\\2.4.3\\xunit.runner.visualstudio.2.4.3.nupkg.sha512"
+    "C:\\Users\\Александр\\.nuget\\packages\\xunit.runner.visualstudio\\2.4.3\\xunit.runner.visualstudio.2.4.3.nupkg.sha512",
+    "C:\\Users\\Александр\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.13\\microsoft.netcore.app.ref.6.0.13.nupkg.sha512",
+    "C:\\Users\\Александр\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.13\\microsoft.windowsdesktop.app.ref.6.0.13.nupkg.sha512",
+    "C:\\Users\\Александр\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\6.0.13\\microsoft.aspnetcore.app.ref.6.0.13.nupkg.sha512"
   ],
   "logs": []
 }
